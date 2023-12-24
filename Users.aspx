@@ -73,7 +73,6 @@
                     <div class="modal-footer">
                         <asp:Button style="float: left" ID="btnCreate" Text="Save" class="btn btn-primary" OnClick="btnCreate_Click" runat="server" />
                         <asp:Button style="float: left" ID="btnClose" Text="Close" class="btn btn-danger"  OnClick="btnClose_Click" runat="server" />
-
                     </div>
                 </div>
             </div>
@@ -96,35 +95,48 @@
                         <div class="card-body">
                             <div class="col-md-12 col-12">
                                 <table class="table">
-                                    <asp:Repeater ID="rptr1" DataSourceID="ds1" runat="server" OnItemDataBound="rptr1_ItemDataBound">
-                                        <HeaderTemplate>
-                                            <tr>
-                                                <th>Mã nhân viên</th>
-                                                <th>Tên nhân viên</th>
-                                                <th>Email nhân viên</th>
-                                                <th>Mật khẩu nhân viên</th>
-                                                <th>Số điện thoại nhân viên</th>
-                                                <th>Hành động</th>
-                                            </tr>
-                                        </HeaderTemplate>
-                                        <ItemTemplate>
-                                            <tr class="separator">
-                                                <td><%# Eval("UserID") %></td>
-                                                <td><%# Eval("UserName") %></td>
-                                                <td><%# Eval("Email") %></td>
-                                                <td ><%# Eval("Passwords") %></td>
-                                                <td><%# Eval("Tel") %></td>
-                                                <td>
-                                                    <asp:LinkButton ID="btnupdate" CommandName="Update" OnCommand="btnupdate_Command" CommandArgument='<%#Eval("UserID") %>' CssClass="btn btn-sm brn-primary"  runat="server" ><i  class="glyphicon glyphicon-pencil"></i></asp:LinkButton>
+                                   <asp:ListView ID="ListView1" runat="server" DataKeyNames="UserID" OnItemDataBound="ListView1_ItemDataBound" OnPagePropertiesChanging="ListView1_PagePropertiesChanging" OnItemUpdating="ListView1_ItemUpdating">
+    <LayoutTemplate>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mã nhân viên</th>
+                    <th>Tên nhân viên</th>
+                    <th>Email nhân viên</th>
+                    <th>Mật khẩu nhân viên</th>
+                    <th>Số điện thoại nhân viên</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr runat="server" id="itemPlaceholder"></tr>
+            </tbody>
+        </table>
+    </LayoutTemplate>
+    <ItemTemplate>
+        <tr class="separator">
+            <td><%# Eval("UserID") %></td>
+            <td><%# Eval("UserName") %></td>
+            <td><%# Eval("Email") %></td>
+            <td><%# Eval("Passwords") %></td>
+            <td><%# Eval("Tel") %></td>
+            <td>
+                 <asp:LinkButton ID="btnupdate" CommandName="Update" OnCommand="btnupdate_Command" CommandArgument='<%#Eval("UserID") %>' CssClass="btn btn-sm brn-primary"  runat="server" ><i  class="glyphicon glyphicon-pencil"></i></asp:LinkButton>
 
                                                     <asp:LinkButton CommandName="Delete" ID="btndlt" CommandArgument='<%#Eval("UserID") %>' 
                                                             OnClientClick="return confirm('Bạn có muốn xóa không !');"
                                                             OnCommand="btndlt_Command" CssClass="btn btn-sm brn-danger" runat="server" ><i  class="glyphicon glyphicon-trash"></i></asp:LinkButton>
-                                                </td>
-                                            </tr>
-                                        </ItemTemplate>
-                                 
-                                    </asp:Repeater>
+            </td>
+        </tr>
+    </ItemTemplate>
+</asp:ListView>
+ <asp:DataPager ID="DataPager1" runat="server" PagedControlID="ListView1" PageSize="3">
+    <Fields>
+        <asp:NextPreviousPagerField ButtonType="Link" ShowFirstPageButton="true" ShowNextPageButton="false" />
+        <asp:NumericPagerField ButtonType="Button" />
+        <asp:NextPreviousPagerField ButtonType="Link" ShowNextPageButton="true" ShowLastPageButton="false" />
+    </Fields>
+</asp:DataPager>
                                 </table>
                             </div>
                         </div>
@@ -135,10 +147,7 @@
     </section>
 
     <asp:SqlDataSource ID="ds1" ConnectionString="<%$ConnectionStrings:connection %>" runat="server" SelectCommand="Select * from Users" />
-
+    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ConnectionStrings:connection %>" SelectCommand="GetAllUsers"></asp:SqlDataSource>
     <asp:Label ID="lblNoData" runat="server" Visible="false">Không có dữ liệu nhân viên</asp:Label>
-
-
-
 </asp:Content>
 

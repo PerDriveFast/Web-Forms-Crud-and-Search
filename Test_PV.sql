@@ -1,6 +1,7 @@
 create database Test_PV
 use Test_PV
 
+-- Create Table
 create table Users
 (
 	UserID nvarchar(50) not null,
@@ -13,6 +14,10 @@ create table Users
 )
 select * from Users
 
+
+-- Create Procedure 
+
+-- pcd_SaveUsers
 create procedure pcd_SaveUsers
 @userid nvarchar(50),
 @username nvarchar(50),
@@ -24,7 +29,7 @@ begin
 insert into Users(UserID, UserName,Passwords, Email,Tel) values(@userid,@username, @password,@email, @tel)
 end
 
-
+-- pcd_UpadteUser
 create procedure pcd_UpadteUser
 @userid nvarchar(50),
 @username nvarchar(50),
@@ -41,7 +46,7 @@ Tel= @tel
 from Users where UserID = @userid
 end
 
-
+-- pcd_DeleteUsers
 create procedure pcd_DeleteUsers
 @userID nvarchar(50)
 as 
@@ -50,7 +55,7 @@ delete from Users where UserID = @userID
 end
 
 
--- Create a stored procedure for user search
+-- SearchUsers
 CREATE PROCEDURE SearchUsers
     @SearchKeyword NVARCHAR(100)
 AS
@@ -63,9 +68,18 @@ BEGIN
        OR UserID LIKE '%' + @SearchKeyword + '%'
 END
 
+-- GetUserData
 CREATE PROCEDURE GetUserData
     @userid NVARCHAR(50)
 AS
 BEGIN
     SELECT * FROM Users WHERE UserID = @userid;
 END
+
+-- GetAllUsers
+CREATE PROCEDURE GetAllUsers
+AS
+BEGIN
+    SELECT * FROM Users;
+END
+
