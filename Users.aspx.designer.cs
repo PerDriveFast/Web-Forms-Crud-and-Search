@@ -123,6 +123,15 @@ namespace WebApplication1
         protected global::System.Web.UI.WebControls.Button btnSearch;
 
         /// <summary>
+        /// btnExportToExcel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnExportToExcel;
+
+        /// <summary>
         /// ListView1 control.
         /// </summary>
         /// <remarks>

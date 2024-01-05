@@ -1,9 +1,11 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -63,6 +65,7 @@ namespace WebApplication1
                 adapter.Fill(dt);
 
                 return dt;
+
             }
         }
         #endregion
@@ -107,8 +110,8 @@ namespace WebApplication1
                 // Handle the exception (log or display an error message)
                 Console.WriteLine(ex.Message);
             }
-        } 
-        #endregion 
+        }
+        #endregion
 
         #region UpdateItemInDatabase
         private void UpdateItemInDatabase(string userId, string updatedUserName, string updatedEmail, string updatedPassword, string updatedTel)
@@ -167,7 +170,7 @@ namespace WebApplication1
         }
         #endregion
 
-      
+
         #region btnCreate_Click
         protected void btnCreate_Click(object sender, EventArgs e)
         {
@@ -205,7 +208,7 @@ namespace WebApplication1
                     cmd.Parameters.AddWithValue("@password", txtMK.Text);
                     cmd.Parameters.AddWithValue("@tel", txtTel.Text);
 
-                   
+
                     if (string.IsNullOrEmpty(hdid.Value))
                     {
                         cmd.Parameters.AddWithValue("@userid", txtMaNV.Text);
@@ -231,7 +234,7 @@ namespace WebApplication1
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex.Message.ToString()); }
-        } 
+        }
         #endregion
         #region btnupdate_Command
         protected void btnupdate_Command(object sender, CommandEventArgs e)
@@ -271,7 +274,7 @@ namespace WebApplication1
                 ScriptManager.RegisterStartupScript(this, GetType(), "OpenModalScript", "$('#mymodal').modal('show');", true);
             }
             catch (Exception ex) { Console.WriteLine(ex.Message.ToString()); }
-        } 
+        }
         #endregion
         #region btndlt_Command
         protected void btndlt_Command(object sender, CommandEventArgs e)
@@ -338,7 +341,7 @@ namespace WebApplication1
                         ListView1.Visible = false; // Optionally, hide the Repeater
                         lblNoData.Visible = true; // Show a label with a message
                     }
-                   
+
                 }
             }
             catch (Exception ex)
@@ -367,5 +370,74 @@ namespace WebApplication1
             DataPager1.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
             BindData();
         }
+
+        protected void btnExportToExcel_Click(object sender, EventArgs e)
+        {
+            ExportToExcel();
+        }
+        // Set Count File Downloading
+        private int j
+        {
+            get { return (int)(Session["JCount"] ?? 0); }
+            set { Session["JCount"] = value; }
+        }
+        private void ExportToExcel()
+        {
+            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["connection"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("GetAllUsers", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    con.Open();
+
+                    SqlDataReader rdr = cmd.ExecuteReader();
+
+                    if (rdr.HasRows)
+                    {
+                        ListView1.DataSource = rdr;
+                        
+
+                        using (XLWorkbook wb = new XLWorkbook())
+                        {
+                            DataTable dt = new DataTable();
+                            for (int i = 0; i < rdr.FieldCount; i++)
+                            {
+                                dt.Columns.Add(rdr.GetName(i));
+                            }
+
+                            while (rdr.Read())
+                            {
+                                DataRow row = dt.NewRow();
+                                for (int i = 0; i < rdr.FieldCount; i++)
+                                {
+                                    row[i] = rdr[i];
+                                }
+                                dt.Rows.Add(row);
+                            }
+
+                            wb.Worksheets.Add(dt, "Users");
+                           
+                            j++;
+                            // Save the Excel file
+                            string fileName = Path.Combine(Server.MapPath("~/ExportedFiles"), $"Users_{j}.xlsx");
+                            wb.SaveAs(fileName);
+
+                            // Provide the file for download
+                            Response.Clear();
+                            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                            Response.AddHeader("content-disposition", $"attachment;filename={Path.GetFileName(fileName)}");
+                            Response.TransmitFile(fileName);
+                            Response.End();
+                        }
+                    }
+                    else
+                    {
+                        lblNoData.Visible = true;
+                    }
+                }
+            }
+        }
+        }
     }
-}

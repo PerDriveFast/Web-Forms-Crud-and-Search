@@ -87,6 +87,7 @@
                         <asp:Button Text="Add User" ID="modal" CssClass="btn btn-primary" OnClick="modal_Click" runat="server" />
                        <asp:TextBox ID="txtSearch" runat="server" placeholder="Enter keyword"></asp:TextBox>
                         <asp:Button ID="btnSearch" runat="server" Text="Search" OnClick="btnSearch_Click" />
+                        <asp:Button ID="btnExportToExcel" runat="server" Text="Export to Excel" OnClick="btnExportToExcel_Click" CssClass="btn btn-success" />
 
                     </div>
                     <br />
