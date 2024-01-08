@@ -373,7 +373,23 @@ namespace WebApplication1
 
         protected void btnExportToExcel_Click(object sender, EventArgs e)
         {
-            ExportToExcel();
+            string exportFormat = ddlExportFormat.SelectedValue;
+
+            switch (exportFormat)
+            {
+                case "Excel":
+                    ExportToExcel();
+                    break;
+                case "PDF":
+                    ExportToPDF();
+                    break;
+                case "Word":
+                    ExportToWord();
+                    break;
+                default:
+                    // Handle other export formats or show an error message
+                    break;
+            }
         }
         // Set Count File Downloading
         private int j
@@ -381,6 +397,17 @@ namespace WebApplication1
             get { return (int)(Session["JCount"] ?? 0); }
             set { Session["JCount"] = value; }
         }
+       
+        private void ExportToPDF()
+        {
+
+        }
+
+        private void ExportToWord()
+        {
+
+        }
+
         private void ExportToExcel()
         {
             string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["connection"].ConnectionString;

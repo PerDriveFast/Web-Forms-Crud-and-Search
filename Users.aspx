@@ -87,10 +87,17 @@
                         <asp:Button Text="Add User" ID="modal" CssClass="btn btn-primary" OnClick="modal_Click" runat="server" />
                        <asp:TextBox ID="txtSearch" runat="server" placeholder="Enter keyword"></asp:TextBox>
                         <asp:Button ID="btnSearch" runat="server" Text="Search" OnClick="btnSearch_Click" />
-                        <asp:Button ID="btnExportToExcel" runat="server" Text="Export to Excel" OnClick="btnExportToExcel_Click" CssClass="btn btn-success" />
-
+                            <div class="col-md-3 text-md-left">
+                        <asp:DropDownList ID="ddlExportFormat" runat="server" CssClass="form-control">
+                            <asp:ListItem Text="Excel" Value="Excel" />
+                            <asp:ListItem Text="PDF" Value="PDF" />
+                            <asp:ListItem Text="Word" Value="Word" />
+                        </asp:DropDownList>
+                        <asp:Button ID="btnExport" runat="server" Text="Export" OnClick="btnExportToExcel_Click" CssClass="btn btn-success ml-2" />
                     </div>
-                    <br />
+                    </div>
+                    
+               
 
                     <div class="card-content">
                         <div class="card-body">
@@ -150,5 +157,7 @@
     <asp:SqlDataSource ID="ds1" ConnectionString="<%$ConnectionStrings:connection %>" runat="server" SelectCommand="Select * from Users" />
     <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ConnectionStrings:connection %>" SelectCommand="GetAllUsers"></asp:SqlDataSource>
     <asp:Label ID="lblNoData" runat="server" Visible="false">Không có dữ liệu nhân viên</asp:Label>
+    
+
 </asp:Content>
 
